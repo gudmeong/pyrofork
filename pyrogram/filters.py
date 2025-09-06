@@ -26,8 +26,9 @@ import pyrogram
 from pyrogram import enums
 from pyrogram.types import (
     CallbackQuery,
-    InlineKeyboardMarkup,
+    ChosenInlineResult,
     InlineQuery,
+    InlineKeyboardMarkup,
     Message,
     PreCheckoutQuery,
     ReplyKeyboardMarkup,
@@ -972,6 +973,7 @@ def regex(pattern: Union[str, Pattern], flags: int = 0):
 
     - :obj:`~pyrogram.types.Message`: The filter will match ``text`` or ``caption``.
     - :obj:`~pyrogram.types.CallbackQuery`: The filter will match ``data``.
+    - :obj:`~pyrogram.types.ChosenInlineResult`: The filter will match ``query``.
     - :obj:`~pyrogram.types.InlineQuery`: The filter will match ``query``.
     - :obj:`~pyrogram.types.PreCheckoutQuery`: The filter will match ``payload``.
 
@@ -991,7 +993,7 @@ def regex(pattern: Union[str, Pattern], flags: int = 0):
             value = update.text or update.caption
         elif isinstance(update, CallbackQuery):
             value = update.data
-        elif isinstance(update, InlineQuery):
+        elif isinstance(update, (ChosenInlineResult, InlineQuery)):
             value = update.query
         elif isinstance(update, PreCheckoutQuery):
             value = update.payload

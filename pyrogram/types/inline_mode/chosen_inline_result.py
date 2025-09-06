@@ -17,8 +17,8 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-from base64 import b64encode
-from struct import pack
+import re
+from typing import List
 
 import pyrogram
 from pyrogram import raw
@@ -52,6 +52,10 @@ class ChosenInlineResult(Object, Update):
             Identifier of the sent inline message.
             Available only if there is an :doc:`inline keyboard <InlineKeyboardMarkup>` attached to the message.
             Will be also received in :doc:`callback queries <CallbackQuery>` and can be used to edit the message.
+
+        matches (List of regex Matches, *optional*):
+            A list containing all `Match Objects <https://docs.python.org/3/library/re.html#match-objects>`_ that match
+            the query of this inline query. Only applicable when using :obj:`Filters.regex <pyrogram.Filters.regex>`.
     """
 
     def __init__(
@@ -62,7 +66,8 @@ class ChosenInlineResult(Object, Update):
         from_user: "types.User",
         query: str,
         location: "types.Location" = None,
-        inline_message_id: str = None
+        inline_message_id: str = None,
+        matches: List[re.Match] = None
     ):
         super().__init__(client)
 
@@ -71,6 +76,7 @@ class ChosenInlineResult(Object, Update):
         self.query = query
         self.location = location
         self.inline_message_id = inline_message_id
+        self.matches = matches
 
     @staticmethod
     def _parse(client, chosen_inline_result: raw.types.UpdateBotInlineSend, users) -> "ChosenInlineResult":
