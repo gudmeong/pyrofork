@@ -106,12 +106,11 @@ async def parse_messages(
     business_connection_id: str = None,
     is_scheduled: bool = False
 ) -> List["types.Message"]:
-    users = {i.id: i for i in messages.users}
-    chats = {i.id: i for i in messages.chats}
-    if hasattr(messages, "topics"):
-        topics = {i.id: i for i in messages.topics}
-    else:
-        topics = None
+    
+    users = {i.id: i for i in getattr(messages, "users", [])}
+    chats = {i.id: i for i in getattr(messages, "chats", [])}
+    topics = {i.id: i for i in getattr(messages, "topics", [])}
+    
     if not messages.messages:
         return types.List()
 
